@@ -1,24 +1,18 @@
-import re
-
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
-class User(models.Model):
-    _inherit = 'res.users'
+class Partner(models.Model):
+    _inherit = 'res.partner'
     hobby = fields.Many2one('demo.hobby', string='Favorite Hobby')
     hobbies = fields.Many2many('demo.hobby', string='Hobbies', relation='demo_user_hobby', column1='user_id', column2='hobby_id')
-    description = fields.Char(string='Description')
 
-    def create(self, vals):
-        if 'description' not in vals:
-            vals['description'] = f"I'm {vals['name']}"
-        return super().create(vals)
-
-    @api.constrains('description')
-    def _description_is_one_line(self):
-        for user in self:
-            if user.description and not re.match(r'^[\w \'_]+$', user.description):
-                raise ValueError(f'Description must be oneline, got `{user.description}`')
+    # @api.constrains('hobby', 'hobbies')
+    # def _constraint_hobby_in_hobbies(self):
+    #     for partner in self:
+    #         if partner.hobby and partner.hobby not in partner.hobbies:
+    #             e = self.env._("The favorite hobby must be listed in the hobbies.")
+    #             raise ValidationError(e)
 
 
 class Hobby(models.Model):

@@ -1,6 +1,7 @@
 from psycopg2.errors import NotNullViolation
 
-from odoo.tests import Like, TransactionCase
+from odoo.exceptions import ValidationError
+from odoo.tests import TransactionCase
 from odoo.tools import mute_logger
 
 
@@ -17,35 +18,28 @@ class TestHobby(TransactionCase):
                 self.env['demo.hobby'].create({})
 
 
-class TestUsers(TransactionCase):
-
-    def tearDown(self):
-        super().tearDown()
-        self.env.flush_all()
-
-    def test_description_is_required(self):
-        with mute_logger('odoo.sql_db'):
-            with self.assertRaises(Exception):
-                user = self.env['res.users'].create({
-                    'name': 'Marie-Noël',
-                    'login': 'mnv',
-                })
-                user.description = None
-
-    def test_description_one_line(self):
-        with self.assertRaises(ValueError) as error_catcher:
-            self.env['res.users'].create({
-                'name': 'Jeremy',
-                'login': 'jem',
-                'description': 'I like \n Sports'
-            })
-        self.assertEqual(error_catcher.exception.args[0], Like("Description must be oneline ..."))
+class TestPartners(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.partner = cls.env['res.partner'].create({
+            'name': 'Marie-Noël',
+        })
 
     def test_hobby(self):
+        swimming = self.env.ref('demo.hobby_swimming')
         minecraft = self.env.ref('demo.hobby_minecraft')
-        user = self.env['res.users'].create({
-            'name': 'Pierre',
-            'login': 'pie',
+        self.partner.write({
+            'hobbies': swimming.ids + minecraft.ids,
             'hobby': minecraft.id,
         })
-        self.assertEqual(user.hobby.name, 'Minecraft')
+        self.assertEqual(self.partner.hobby.name, 'Minecraft')
+
+    # def test_hobby_in_hobbies(self):
+    #     swimming = self.env.ref('demo.hobby_swimming')
+    #     minecraft = self.env.ref('demo.hobby_minecraft')
+    #     with self.assertRaises(ValidationError):
+    #         self.partner.write({
+    #             'hobbies': swimming.ids,
+    #             'hobby': minecraft.id,
+    #         })

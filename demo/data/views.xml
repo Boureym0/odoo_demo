@@ -1,11 +1,14 @@
 <data>
-    <record id="res_users_form_view_demo" model="ir.ui.view">
-        <field name="name">res.users.form.view</field>
-        <field name="model">res.users</field>
-        <field name="inherit_id" ref="base.view_users_form_simple_modif" />
+    <record id="res_partner_form_view_demo" model="ir.ui.view">
+        <field name="name">view_partner_form_demoo</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='email']" position="after">
-                <field name="hobby"/>
+            <xpath expr="//sheet/group" position="after">
+                <group>
+                    <field name="hobby"/>
+                    <field name="hobbies" widget="many2many_tags"/>
+                </group>
             </xpath>
         </field>
     </record>

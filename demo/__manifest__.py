@@ -4,7 +4,7 @@
     'summary': 'A minimal demo app for Odoo',
     'description': 'This is a minimal demo app for Odoo.',
     'author': 'xdo',
-    'depends': ['base'],
+    'depends': ['contacts'],
     'installable': True,
     'application': True,
     'license': 'LGPL-3',
