@@ -1,12 +1,13 @@
-from odoo.tests import TransactionCase, Like
 from psycopg2.errors import NotNullViolation
+
+from odoo.tests import Like, TransactionCase
 from odoo.tools import mute_logger
 
 
 class TestHobby(TransactionCase):
     def test_name(self):
         hobby = self.env['demo.hobby'].create({
-            'name': 'Programming'
+            'name': 'Programming',
         })
         self.assertEqual(hobby.name, 'Programing')
 
@@ -31,7 +32,6 @@ class TestUsers(TransactionCase):
                 })
                 user.description = None
 
-
     def test_description_one_line(self):
         with self.assertRaises(ValueError) as error_catcher:
             self.env['res.users'].create({
@@ -46,6 +46,6 @@ class TestUsers(TransactionCase):
         user = self.env['res.users'].create({
             'name': 'Pierre',
             'login': 'pie',
-            'hobby': minecraft.id
+            'hobby': minecraft.id,
         })
         self.assertEqual(user.hobby.name, 'Minecraft')

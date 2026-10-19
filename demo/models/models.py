@@ -1,5 +1,6 @@
 import re
-from odoo import models, fields, api
+
+from odoo import api, fields, models
 
 
 class User(models.Model):
@@ -11,13 +12,14 @@ class User(models.Model):
     def create(self, vals):
         if 'description' not in vals:
             vals['description'] = f"I'm {vals['name']}"
-        return super(User, self).create(vals)
-                                        
+        return super().create(vals)
+
     @api.constrains('description')
     def _description_is_one_line(self):
         for user in self:
             if user.description and not re.match(r'^[\w \'_]+$', user.description):
                 raise ValueError(f'Description must be oneline, got `{user.description}`')
+
 
 class Hobby(models.Model):
     _name = 'demo.hobby'
